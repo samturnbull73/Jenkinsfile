@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+	tools {
+	    maven 'maven 3.3.9'
+	}
+	
+	stages {
+	    stage('Preparation') {
+		    steps {
+			    git url: 'https://github.com/surenbika/sample-maven-project.git', branch: 'master'
+			}
+		}
+		stage('Build') {
+		    steps {
+				sh "'${MAVEN_HOME}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+		    } 
+		}
+		stage('Results') {
+			steps {
+				junit '**/target/surefire-reports/TEST-*.xml'
+			}
+		}
+	}
+}
+				
